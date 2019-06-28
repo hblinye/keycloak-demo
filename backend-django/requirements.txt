@@ -1,0 +1,9 @@
+Django==2.2.2
+djangorestframework
+markdown
+django-filter
+drf-renderer-xlsx
+python-keycloak
+requests
+python-jose
+django-cors-headers

@@ -1,0 +1,81 @@
+{
+  "allowRemoteResourceManagement": true,
+  "policyEnforcementMode": "ENFORCING",
+  "resources": [
+    {
+      "name": "inventory",
+      "ownerManagedAccess": false,
+      "attributes": {},
+      "_id": "b3edd460-9276-46cc-ade8-07e107061db8",
+      "uris": [
+        "http://192.168.99.100:8082/*"
+      ]
+    }
+  ],
+  "policies": [
+    {
+      "id": "366bc1ba-e9b7-4084-841b-076f5fab0ed8",
+      "name": "normal-user-policy",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"backend-client/normal-user\",\"required\":true},{\"id\":\"normal-user\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "ca0cc3dc-4f88-426f-9595-ca4e9e6af715",
+      "name": "super-user-policy",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"backend-client/super-user\",\"required\":true},{\"id\":\"super-user\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "0f3f500b-2bfd-42a5-b9fa-ee86673d6ba8",
+      "name": "read-only",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "scopes": "[\"inventory:view\"]",
+        "applyPolicies": "[\"normal-user-policy\"]"
+      }
+    },
+    {
+      "id": "cd13e7e2-673f-4759-8ce6-5fb75f991047",
+      "name": "full-access",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "scopes": "[\"inventory:delete\",\"inventory:update\",\"inventory:view\",\"inventory:add\"]",
+        "applyPolicies": "[\"super-user-policy\"]"
+      }
+    }
+  ],
+  "scopes": [
+    {
+      "id": "3cbf1631-b6d2-4261-8bb2-5d5b7d216397",
+      "name": "inventory:view",
+      "displayName": "inventory view"
+    },
+    {
+      "id": "5e949a66-761e-4faf-8320-f53523037d5c",
+      "name": "inventory:delete",
+      "displayName": "inventory delete"
+    },
+    {
+      "id": "d72eff16-0924-4040-a046-3edd2aa05045",
+      "name": "inventory:update",
+      "displayName": "inventory update"
+    },
+    {
+      "id": "b1ab5733-b242-4db9-8a74-c8587b90efbf",
+      "name": "inventory:add",
+      "displayName": "inventory add"
+    }
+  ]
+}
