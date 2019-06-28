@@ -18,7 +18,6 @@ const getters = {
 const mutations = {
     setInfo(state, info) {
         state.info = info
-        console.log(state.info)
     }
 }
 
