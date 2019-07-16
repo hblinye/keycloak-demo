@@ -16,8 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from demo.views import InventoryViewSet
+from rest_framework import routers
 
+router = routers.SimpleRouter()
+router.register(r'demo', InventoryViewSet)
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('demo/', InventoryViewSet.as_view({'get':'list', 'post': 'create'}))
+    path('admin/', admin.site.urls)
 ]
+
+for url in router.urls:
+  urlpatterns.append(url)

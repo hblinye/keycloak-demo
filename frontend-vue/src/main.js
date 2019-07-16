@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import { router } from './routers'
 import Keycloak from 'keycloak-js'
 import { store } from './store'
 
@@ -24,12 +25,9 @@ keycloak.init({ onLoad: initOptions.onLoad }).success((auth) =>{
 
     new Vue({
       store: store,
+      router,
       render: h => h(App),
     }).$mount('#app')
-  
-    
-    localStorage.setItem("vue-token", keycloak.token);
-    localStorage.setItem("vue-refresh-token", keycloak.refreshToken);
 
 }).error(() =>{
   console.log("Authenticated Failed");

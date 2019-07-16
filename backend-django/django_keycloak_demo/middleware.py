@@ -180,6 +180,7 @@ class KeycloakMiddleware(MiddlewareMixin):
 
         for perm in user_permissions:
             if required_scope in perm.scopes:
+                request._userinfo = self.keycloak.userinfo(token)
                 return None
 
         # User Permission Denied

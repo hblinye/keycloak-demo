@@ -10,7 +10,11 @@ class InventoryViewSet(viewsets.ModelViewSet):
         'POST': 'inventory:add',
         'PUT': 'inventory:update',
         'DELETE': 'inventory:delete'
-    }    
+    }
     serializer_class = InventorySerializer
     queryset = Inventory.objects.all().order_by('id')
     filter_backends = (django_filters.rest_framework.DjangoFilterBackend, )
+
+    def get_queryset(self):
+        print(self.request._userinfo)
+        return super().get_queryset()
