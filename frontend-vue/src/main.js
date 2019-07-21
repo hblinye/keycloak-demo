@@ -9,18 +9,14 @@ Vue.config.productionTip = false
 let initOptions = {
   url: 'http://192.168.99.100:32768/auth',
   realm: 'keycloak-demo',
-  clientId: 'frontend-client',
-  onLoad:'login-required'
+  clientId: 'frontend-client'
 }
 
-export let keycloak = Keycloak(initOptions);
+export let keycloak = Keycloak(initOptions)
 
-keycloak.init({ onLoad: initOptions.onLoad }).success((auth) =>{
-    console.log(auth)
+keycloak.init({ onLoad:'login-required' }).success((auth) => {
     if(!auth) {
       window.location.reload();
-    } else {
-      console.log("Authenticated");
     }
 
     new Vue({
@@ -29,6 +25,8 @@ keycloak.init({ onLoad: initOptions.onLoad }).success((auth) =>{
       render: h => h(App),
     }).$mount('#app')
 
+    console.log(keycloak)
+
 }).error(() =>{
-  console.log("Authenticated Failed");
-});
+  window.location.reload()
+})

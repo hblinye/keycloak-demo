@@ -1,18 +1,23 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import ErrorVue from './components/ErrorVue.vue'
+import Home from './views/Home.vue'
+import ErrorPage from './views/ErrorPage.vue'
+import Inventory from './views/inventory/Inventory.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    component: HelloWorld
+    component: Home
   }, {
-    path: '/error',
+    path: '/inventory',
+    component: Inventory
+  },
+  {
+    path: '/*',
     name: 'error',
-    component: ErrorVue
+    component: ErrorPage
   }
 ]
 

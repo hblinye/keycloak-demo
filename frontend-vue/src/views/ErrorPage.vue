@@ -9,7 +9,3 @@ export default {
   name: 'error'
 }
 </script>
-
-<style>
-
-</style>
