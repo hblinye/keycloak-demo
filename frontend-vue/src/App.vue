@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <h3>
-      <router-link to="/">Home</router-link> |
-      <router-link to="inventory">Inventory</router-link>
+      <router-link :to="{name: 'home'}">Home</router-link> |
+      <router-link :to="{name: 'inventory_index'}">Inventory</router-link>
     </h3>
     <router-view></router-view>
   </div>
