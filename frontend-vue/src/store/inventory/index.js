@@ -30,12 +30,12 @@ const actions = {
     router.push({name: 'inventory_show', params: { id: result.id }})
     inventory.reset()
   },
-  async destroy({ state, dispatch }, inventory) {
+  async destroy({ state }, inventory) {
     await state.api.delete(inventory)
-    dispatch('load')
+    router.push({name: 'inventory_index'})
   },
   async getDetail({ state }, id) {
-    const detail = await state.api.show(id)
+    const detail = await state.api.show(new Inventory(id))
     return detail
   }
 }

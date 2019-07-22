@@ -14,6 +14,7 @@ const routes = [
     component: Home
   }, {
     path: '/inventory',
+    name: 'inventory',
     component: Inventory,
     children: [
       {

@@ -15,7 +15,7 @@ export class RestApi {
         const sendOptions = {headers: {'AUTHORIZATION': 'Bearer ' + keycloak.token}}
         Object.assign(sendOptions, options)
         let res = await axios.get(
-            this.endpoint + `${instance.id}`,
+            this.endpoint + `${instance.id}/`,
             sendOptions
         )
         resolve(this.model.fromData(res.data))
