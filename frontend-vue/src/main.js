@@ -3,6 +3,8 @@ import App from './App.vue'
 import { router } from './routers'
 import Keycloak from 'keycloak-js'
 import { store } from './store'
+import InventoryForm from './components/inventory/Form.vue'
+
 
 Vue.config.productionTip = false
 
@@ -18,6 +20,8 @@ keycloak.init({ onLoad:'login-required' }).success((auth) => {
     if(!auth) {
       window.location.reload();
     }
+
+    Vue.component('inventory-form', InventoryForm)
 
     new Vue({
       store: store,

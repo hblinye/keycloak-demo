@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Home from './views/Home.vue'
 import ErrorPage from './views/ErrorPage.vue'
 import Inventory from './views/Inventory.vue'
-import { InventoryIndex, InventoryNew, InventoryShow } from './views/inventory/index'
+import { InventoryEdit, InventoryIndex, InventoryNew, InventoryShow } from './views/inventory/index'
 
 Vue.use(VueRouter)
 
@@ -31,6 +31,11 @@ const routes = [
         path: ':id/',
         name: 'inventory_show',
         component: InventoryShow
+      },
+      {
+        path: ':id/edit',
+        name: 'inventory_edit',
+        component: InventoryEdit
       }
     ]
   },
