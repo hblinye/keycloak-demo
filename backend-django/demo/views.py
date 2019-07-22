@@ -21,17 +21,17 @@ class InventoryViewSet(viewsets.ModelViewSet):
         all_inventories = Inventory.objects.filter(user=self.request._current_user)
         return all_inventories
 
-    def perform_create(self, serializer):
-        return self.save_instance(Inventory(), serializer.validated_data)
+    def initial(self, request, *args, **kwargs):
+        super().initial(request, *args, **kwargs)
+        request.data.update(dict(user=self.request._current_user.pk))
 
-    def perform_update(self, serializer):
-        return self.save_instance(serializer.instance, serializer.validated_data)
-
-    def save_instance(self, instance, validated_data):
-        instance.name = validated_data.get('name')
-        instance.user = self.request._current_user
-        instance.save()
-        return instance
+    # def create(self, request, *args, **kwargs):
+    #     request.data.update(dict(user=self.request._current_user.pk))
+    #     return super().create(request, *args, **kwargs)
+    #
+    # def update(self, request, *args, **kwargs):
+    #     request.data.update(dict(user=self.request._current_user.pk))
+    #     return super().update(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()

@@ -4,7 +4,7 @@ import { Inventory } from '../../models/inventory'
 import { router } from '../../routers'
 
 const state = {
-  restApi: new RestApi(apiUrls.demo, Inventory),
+  api: new RestApi(apiUrls.demo, Inventory),
   allInventories: null
 }
 
@@ -22,17 +22,21 @@ const mutations = {
 
 const actions = {
   async load ({ state, commit }) {
-    const allInventories = await state.restApi.list()
+    const allInventories = await state.api.list()
     commit('updateAll', allInventories)
   },
   async save({ state }, inventory) {
-    const result = await state.restApi.save(inventory)
+    const result = await state.api.save(inventory)
     router.push({name: 'inventory_show', params: { id: result.id }})
     inventory.reset()
   },
   async destroy({ state, dispatch }, inventory) {
-    await state.restApi.delete(inventory)
+    await state.api.delete(inventory)
     dispatch('load')
+  },
+  async getDetail({ state }, id) {
+    const detail = await state.api.show(id)
+    return detail
   }
 }
 

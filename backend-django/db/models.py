@@ -25,8 +25,8 @@ class User(models.Model):
 class Inventory(models.Model):
 
     name = models.CharField(max_length=100)
+    accessKey = models.UUIDField(editable=False, unique=True)
     user = models.ForeignKey(
         User,
-        on_delete=models.CASCADE,
-        related_name='user'
+        on_delete=models.CASCADE
     )

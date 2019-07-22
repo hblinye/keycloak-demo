@@ -1,7 +1,8 @@
 class Inventory {
-  constructor(id='', name='', origin='') {
+  constructor(id='', name='', accessKey='', origin='') {
     this.id = id
     this._name = name
+    this.accessKey = accessKey
     this.origin = origin
   }
 
@@ -9,6 +10,7 @@ class Inventory {
     return new Inventory(
       data.id || '',
       data.name || '',
+      data.accessKey || '',
       data
     )
   }
@@ -24,7 +26,8 @@ class Inventory {
   toData() {
     return {
       id: this.id,
-      name: this._name
+      name: this._name,
+      accessKey: this.accessKey
     }
   }
 
