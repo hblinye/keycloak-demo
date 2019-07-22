@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from .serializers import InventorySerializer
 from db.models import Inventory
 import django_filters.rest_framework
@@ -31,3 +32,17 @@ class InventoryViewSet(viewsets.ModelViewSet):
         instance.user = self.request._current_user
         instance.save()
         return instance
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.user_id == self.request._current_user.id:
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        else:
+            return Response({"detail": "no permission"}, status=status.HTTP_403_FORBIDDEN)
+
+    def perform_destroy(self, instance):
+        if instance.user_id == self.request._current_user.id:
+            instance.delete()
+        else:
+            raise ValidationError('no permission')

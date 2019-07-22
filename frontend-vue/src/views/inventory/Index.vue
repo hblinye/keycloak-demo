@@ -4,11 +4,9 @@
     <p v-for="(inv, index) in list" :key="index">
       <label>
         name:
-        <input type="text" v-model="inv.name"/>
+        {{ inv.name }}
       </label>
-      <button @click="save(inv)">update</button>
-      <button @click="destroy(inv)">delete</button>
-      <button @click="inv.reset()">reset</button>
+      <button @click="show(inv)">show</button>
     </p>
   </div>
 </template>
@@ -27,7 +25,10 @@ export default {
     })
   },
   methods: {
-    ...mapActions('inventory', ['load', 'save', 'destroy'])
+    ...mapActions('inventory', ['load']),
+    show (inventory) {
+      this.$router.push({name: 'inventory_show', params: {id: inventory.id}})
+    }
   }
 }
 </script>
