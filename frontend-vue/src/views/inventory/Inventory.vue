@@ -17,7 +17,7 @@
           name:
           <input type="text" v-model="inv.name"/>
         </label>
-        <button @click="saveInventory(inv)">update</button>
+        <button @click="save(inv)">update</button>
         <button @click="destroy(inv)">delete</button>
         <button @click="inv.reset()">reset</button>
       </p>

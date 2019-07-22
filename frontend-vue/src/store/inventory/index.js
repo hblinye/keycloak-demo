@@ -26,8 +26,8 @@ const actions = {
   },
   async save({ state, dispatch }, inventory) {
     await state.restApi.save(inventory)
-    inventory.reset()
     dispatch('load')
+    inventory.reset()
   },
   async destroy({ state, dispatch }, inventory) {
     await state.restApi.delete(inventory)
