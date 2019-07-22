@@ -7,6 +7,7 @@ from keycloak import KeycloakOpenID
 from keycloak.exceptions import KeycloakInvalidTokenError, raise_error_from_response, KeycloakGetError
 from rest_framework.exceptions import PermissionDenied, AuthenticationFailed, NotAuthenticated
 import json
+from db.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -145,11 +146,11 @@ class KeycloakMiddleware(MiddlewareMixin):
                 logger.debug('** exclude path found, skipping')
                 return None
 
-        try:
-            view_scopes = view_func.cls.keycloak_scopes
-        except AttributeError as e:
-            logger.debug('Allowing free acesss, since no authorization configuration (keycloak_scopes) found for this request route :%s',request)
-            return None
+        # try:
+        #     view_scopes = view_func.cls.keycloak_scopes
+        # except AttributeError as e:
+        #     logger.debug('Allowing free acesss, since no authorization configuration (keycloak_scopes) found for this request route :%s',request)
+        #     return None
 
         if 'HTTP_AUTHORIZATION' not in request.META:
             return JsonResponse({"detail": NotAuthenticated.default_detail},
@@ -158,31 +159,49 @@ class KeycloakMiddleware(MiddlewareMixin):
         auth_header = request.META.get('HTTP_AUTHORIZATION').split()
         token = auth_header[1] if len(auth_header) == 2 else auth_header[0]
 
-        # Get default if method is not defined.
-        required_scope = view_scopes.get(request.method, None) \
-            if view_scopes.get(request.method, None) else view_scopes.get('DEFAULT', None)
+        # check permission
+        # # Get default if method is not defined.
+        # required_scope = view_scopes.get(request.method, None) \
+        #     if view_scopes.get(request.method, None) else view_scopes.get('DEFAULT', None)
 
-        # DEFAULT scope not found and DEFAULT_ACCESS is DENY
-        if not required_scope and self.default_access == 'DENY':
-            return JsonResponse({"detail": PermissionDenied.default_detail},
-                                status=PermissionDenied.status_code)
+        # # DEFAULT scope not found and DEFAULT_ACCESS is DENY
+        # if not required_scope and self.default_access == 'DENY':
+        #     return JsonResponse({"detail": PermissionDenied.default_detail},
+        #                         status=PermissionDenied.status_code)
+
+        # try:
+        #     options = {"verify_signature": True, "verify_aud": True, "exp": True}
+        #     user_permissions = self.keycloak.get_permissions(token,
+        #                                                      method_token_info=self.method_validate_token.lower(),
+        #                                                      key=self.client_public_key,
+        #                                                      options=options
+        #                                                      )
+        # except KeycloakInvalidTokenError as e:
+        #     return JsonResponse({"detail": AuthenticationFailed.default_detail},
+        #                         status=AuthenticationFailed.status_code)
+
+        # for perm in user_permissions:
+        #     if required_scope in perm.scopes:
+        #         request._userinfo = self.keycloak.userinfo(token)
+        #         return None
+
+        # # User Permission Denied
+        # return JsonResponse({"detail": PermissionDenied.default_detail},
+        #                     status=PermissionDenied.status_code)
 
         try:
             options = {"verify_signature": True, "verify_aud": True, "exp": True}
-            user_permissions = self.keycloak.get_permissions(token,
-                                                             method_token_info=self.method_validate_token.lower(),
-                                                             key=self.client_public_key,
-                                                             options=options
-                                                             )
+            token_info = self.keycloak.decode_token(token,
+                                                    key=self.client_public_key,
+                                                    options=options
+                                                    )
+            user, result = User.objects.update_or_create(
+                sub=token_info.get('sub', None),
+                family_name=token_info.get('family_name', None),
+                given_name=token_info.get('given_name', None)
+            )
+            request._current_user = user
+            return None
         except KeycloakInvalidTokenError as e:
             return JsonResponse({"detail": AuthenticationFailed.default_detail},
                                 status=AuthenticationFailed.status_code)
-
-        for perm in user_permissions:
-            if required_scope in perm.scopes:
-                request._userinfo = self.keycloak.userinfo(token)
-                return None
-
-        # User Permission Denied
-        return JsonResponse({"detail": PermissionDenied.default_detail},
-                            status=PermissionDenied.status_code)

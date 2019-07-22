@@ -25,4 +25,4 @@ urlpatterns = [
 ]
 
 for url in router.urls:
-  urlpatterns.append(url)
+    urlpatterns.append(url)
